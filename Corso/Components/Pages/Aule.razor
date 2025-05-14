@@ -1,0 +1,59 @@
+﻿@using Corso.Data.DAL
+@using Corso.Services
+@using Corso.Services.DTOs
+@using Mapster
+@page "/Aule"
+@rendermode InteractiveServer
+@inject IAulaService aulaService 
+@inject NavigationManager Navigation
+
+
+<h3>Aule</h3>
+
+@if(aule == null || isLoading)
+{
+    <p>Caricamento in corso...</p>
+}
+else  
+{  
+   <Corso.Components.Generic.TableComponent Items="aule" TestoBottone="Elimina" OnAzioneClick="@((AulaDTO aula) => EliminaAula(aula))"/>  
+}
+
+<button class="btn btn-primary" @onclick="VaiAlForm">Crea Aula</button>
+
+@code {
+    private List<AulaDTO> aule = new List<AulaDTO>();
+    private bool isLoading = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoading = true;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await CaricaAule();
+            StateHasChanged();
+        }
+    }
+
+    private async Task CaricaAule()
+    {
+        isLoading = true;
+        aule = await aulaService.GetAuleAsync();
+        isLoading = false;
+    }
+
+    private async Task EliminaAula(AulaDTO aula)
+    {
+        await aulaService.DeleteAulaAsync(aula.Id);
+        await CaricaAule();
+    }
+
+    private void VaiAlForm()
+    {
+        Navigation.NavigateTo("/crea-aula");
+    }
+}

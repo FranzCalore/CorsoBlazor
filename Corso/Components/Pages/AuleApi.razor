@@ -1,0 +1,94 @@
+﻿@page "/AuleApi"
+@inject HttpClient Http
+@rendermode InteractiveServer
+@using Corso.Services.DTOs
+
+<h3>Aule</h3>
+
+@if (aule == null || isLoading)
+{
+    <p>Caricamento in corso...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Posti</th>
+                <th>Azioni</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var aula in aule)
+            {
+                <tr>
+                    <td>@aula.Nome</td>
+                    <td>@aula.Posti</td>
+                    <td>
+                        <button @onclick="() => EliminaAula(aula.Id)" class="btn btn-danger">Elimina</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<button @onclick="AggiungiAulaFittizia" class="btn btn-primary">Aggiungi Aula (Test)</button>
+
+@code {
+
+    private List<AulaDTO> aule = new List<AulaDTO>();
+
+    private bool isLoading = false;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CaricaAule();
+    }
+
+    private async Task CaricaAule()
+    {
+        try
+        {
+            isLoading = true;
+            aule = await Http.GetFromJsonAsync<List<AulaDTO>>("https://localhost:44326/api/aule")
+                   ?? new List<AulaDTO>();
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Errore nel caricamento: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task EliminaAula(int id)
+    {
+        var response = await Http.DeleteAsync($"https://localhost:44326/api/aule/{id}");
+        if (response.IsSuccessStatusCode)
+        {
+            await CaricaAule();
+        }
+        else
+        {
+            Console.WriteLine($"Errore nell'eliminazione: {response.ReasonPhrase}");
+        }
+    }
+
+    private async Task AggiungiAulaFittizia()
+    {
+        var nuovaAula = new CreateAulaDTO { Nome = "Aula Test", Posti = 25 };
+        var response = await Http.PostAsJsonAsync("https://localhost:44326/api/aule", nuovaAula);
+        if (response.IsSuccessStatusCode)
+        {
+            await CaricaAule();
+        }
+    }
+
+}

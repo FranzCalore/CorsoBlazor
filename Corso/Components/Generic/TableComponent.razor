@@ -1,0 +1,27 @@
+﻿@typeparam T
+
+<table class="table">
+    <thead>
+        <tr>
+            @foreach(var property in GetColumnNames())
+            {
+                <th>@property</th>
+            }
+            <th>Azioni</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Items)
+        {
+            <tr>
+                @foreach(var column in GetColumnNames())
+                {
+                    <td>@_columnConfig[column](item)</td>
+                }
+                <td>
+                    <button @onclick="() => OnAzioneClick.InvokeAsync(item)" class="btn btn-danger">@TestoBottone</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
