@@ -1,4 +1,5 @@
-﻿@using Corso.Data.DAL
+﻿@using Corso.Components.Generic
+@using Corso.Data.DAL
 @using Corso.Services
 @using Corso.Services.DTOs
 @using Mapster
@@ -16,7 +17,7 @@
 }
 else  
 {  
-   <Corso.Components.Generic.TableComponent Items="aule" TestoBottone="Elimina" OnAzioneClick="@((AulaDTO aula) => EliminaAula(aula))"/>  
+   <TableComponent Items="aule" TestoBottone="Elimina" OnAzioneClick="@((AulaDTO aula) => EliminaAula(aula))"/>  
 }
 
 <button class="btn btn-primary" @onclick="VaiAlForm">Crea Aula</button>

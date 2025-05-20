@@ -2,6 +2,7 @@ using Corso.Components;
 using Corso.Data;
 using Corso.Data.Repositories;
 using Corso.Services;
+using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

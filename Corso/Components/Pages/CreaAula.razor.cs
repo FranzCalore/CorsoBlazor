@@ -9,14 +9,10 @@ namespace Corso.Components.Pages
     public partial class CreaAula
     {
 
-        private readonly NavigationManager Navigation;
-        private readonly IAulaService aulaService;
-
-        public CreaAula(NavigationManager navigation, IAulaService aulaService)
-        {
-            Navigation = navigation;
-            this.aulaService = aulaService;
-        }
+        [Inject]
+        private  NavigationManager Navigation { get; set; } = default!;
+        [Inject]
+        private IAulaService aulaService { get; set; } = default!;
 
         private CreateAulaModel aula = new();
 
